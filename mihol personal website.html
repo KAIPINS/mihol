@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mihol personal website</title>
+    <!-- Tailwind CSS 外部引用 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 配置Tailwind自定义颜色 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // 清淡专业配色：灰蓝主调
+                        primary: '#4A5568',    // 深灰蓝 - 标题、导航
+                        secondary: '#718096',  // 中灰 - 正文
+                        accent: '#63B3ED',     // 浅蓝 - 强调、悬停
+                        light: '#F7FAFC',      // 极浅灰 - 背景
+                        card: '#FFFFFF',       // 白色 - 卡片
+                        border: '#E2E8F0',     // 浅灰 - 分割线
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-light text-primary font-sans">
+
+    <!-- ========== 报错日志控制台 ========== -->
+    <!-- 默认隐藏，按 F12 或点击右下角按钮可打开查看报错信息 -->
+    <div id="errorConsole" class="fixed bottom-4 right-4 z-50 hidden">
+        <div class="bg-gray-900 text-green-400 text-xs p-3 rounded-lg w-80 max-h-60 overflow-y-auto font-mono">
+            <div class="flex justify-between items-center mb-2 border-b border-gray-700 pb-1">
+                <span>📋 报错日志</span>
+                <button onclick="toggleErrorConsole()" class="text-gray-400 hover:text-white">✕</button>
+            </div>
+            <div id="errorLogList">
+                <div class="text-gray-500">[系统] 页面加载中...</div>
+            </div>
+        </div>
+    </div>
+    <button onclick="toggleErrorConsole()" class="fixed bottom-4 right-4 z-40 bg-primary text-white text-xs px-3 py-2 rounded-full shadow-lg hover:bg-secondary transition">
+        调试日志
+    </button>
+
+    <!-- ========== 导航栏 ========== -->
+    <nav class="sticky top-0 bg-white/90 backdrop-blur-sm border-b border-border z-30">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-lg font-semibold tracking-wide">
+                <span class="text-accent">·</span> Mihol 个人网站
+            </div>
+            <div class="space-x-8 text-sm">
+                <a href="#about" class="hover:text-accent transition-colors">关于我</a>
+                <a href="#portfolio" class="hover:text-accent transition-colors">作品集</a>
+                <a href="#contact" class="hover:text-accent transition-colors">联系方式</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== Hero 区域：个人形象 + 核心介绍 ========== -->
+    <section class="py-20 px-6">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12">
+            <!-- 个人照片框 - 替换 src 即可更换图片 -->
+            <div class="w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-white shadow-lg flex-shrink-0">
+                <!-- ⚠️ 请将下方图片地址替换为你的个人照片 -->
+                <img src="lh 形象照 无帽 裁剪后.png" 
+                     alt="个人照片" 
+                     class="w-full h-full object-cover"
+                     onerror="logError('个人照片加载失败，请检查图片路径')">
+            </div>
+
+            <!-- 个人核心信息 - 根据简历内容修改 -->
+            <div class="text-center md:text-left">
+                <h1 class="text-3xl md:text-4xl font-bold mb-3">李鸿</h1>
+                <p class="text-accent text-lg mb-4">新媒体营销 / 内容策划 / H5互动开发</p>
+                <p class="text-secondary leading-relaxed max-w-xl">
+                    专注于数字媒体内容创作，擅长H5互动开发、视频策划及文案撰写。
+                    致力于用创意和AI技术打造有传播力的数字内容作品。
+                </p>
+                <div class="mt-6 flex gap-4 justify-center md:justify-start">
+                    <a href="#portfolio" class="px-6 py-2 bg-primary text-white rounded-full text-sm hover:bg-accent transition-colors">
+                        查看作品
+                    </a>
+                    <a href="#contact" class="px-6 py-2 border border-primary text-primary rounded-full text-sm hover:bg-primary hover:text-white transition-colors">
+                        联系我
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 个人详细信息 ========== -->
+    <section id="about" class="py-16 px-6 bg-white border-y border-border">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-2xl font-bold mb-10 text-center">
+                <span class="inline-block w-10 h-1 bg-accent mr-3 align-middle"></span>
+                关于我
+                <span class="inline-block w-10 h-1 bg-accent ml-3 align-middle"></span>
+            </h2>
+
+            <div class="grid md:grid-cols-2 gap-10">
+                <h3 class="font-semibold mb-4">校园经历</h3>
+                <!-- 左侧：个人简介文字 -->
+<h3 class="font-semibold mb-4"></h3>
+<div class="space-y-6 text-secondary leading-relaxed border-l-2 border-gray-200 pl-6 ml-2">
+  <p class="relative">
+    <span class="absolute -left-[34px] top-1 w-3 h-3 rounded-full bg-accent"></span>
+    2023年9月，加入学院新媒体运营中心，作为视频部成员，参与《西汽消防演习》、《文理学院2024届毕业典礼》、《一日之计在于晨·晨读》等视频剪辑工作
+  </p>
+  <p class="relative">
+    <span class="absolute -left-[34px] top-1 w-3 h-3 rounded-full bg-accent"></span>
+    2025年6月，加入新媒体实践平台“拾界”，作为内容创作者与编辑者参与公众号的运营工作，负责过《生活多面镜：从冬日光斑到速度狂想》、《星影汇第二期 | 光影交织，开启新一轮感官盛宴》、《不止于课堂：网媒学子镜头下的创意与发现》等多篇公众号文章
+  </p>
+  <p class="relative">
+    <span class="absolute -left-[34px] top-1 w-3 h-3 rounded-full bg-accent"></span>
+    2025年6月，担任学生评委代表参与组织“车影万象”汽车摄影作品大赛。
+  </p>
+  <p class="relative">
+    <span class="absolute -left-[34px] top-1 w-3 h-3 rounded-full bg-accent"></span>
+    2025年11月，协助学院老师完成“车行天地，帧藏自然”摄影大赛的作品选拔工作
+  </p>
+  <p class="relative">
+    <span class="absolute -left-[34px] top-1 w-3 h-3 rounded-full bg-accent"></span>
+    2025年11月，参加陕西省职业院校短视频大赛，荣获优秀奖
+  </p>
+  <p class="relative">
+    <span class="absolute -left-[34px] top-1 w-3 h-3 rounded-full bg-accent"></span>
+    ......
+  </p>
+</div>
+
+                <!-- 右侧：技能标签 -->
+                <div>
+                    <h3 class="font-semibold mb-4">专业技能</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-light text-secondary text-sm rounded-full">H5互动开发</span>
+                        <span class="px-3 py-1 bg-light text-secondary text-sm rounded-full">平面设计</span>
+                        <span class="px-3 py-1 bg-light text-secondary text-sm rounded-full">视频剪辑</span>
+                        <span class="px-3 py-1 bg-light text-secondary text-sm rounded-full">文案策划</span>
+                        <span class="px-3 py-1 bg-light text-secondary text-sm rounded-full"></span>
+                        <span class="px-3 py-1 bg-light text-secondary text-sm rounded-full">摄影后期</span>
+                        <span class="px-3 py-1 bg-light text-secondary text-sm rounded-full">公众号运营</span>
+                        <span class="px-3 py-1 bg-light text-secondary text-sm rounded-full"></span>
+                        <!-- 可自行添加更多技能标签 -->
+                    </div>
+
+                    
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 作品集区域 ========== -->
+    <section id="portfolio" class="py-16 px-6">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-2xl font-bold mb-2 text-center">
+                <span class="inline-block w-10 h-1 bg-accent mr-3 align-middle"></span>
+                作品集
+                <span class="inline-block w-10 h-1 bg-accent ml-3 align-middle"></span>
+            </h2>
+            <p class="text-center text-secondary mb-12"></p>
+
+            <!-- ===== 版块 1: H5互动类 ===== -->
+            <div class="mb-16">
+                <h3 class="text-xl font-semibold mb-6 flex items-center">
+                    <span class="w-1 h-6 bg-accent mr-3"></span>
+                    H5 互动类作品
+                </h3>
+                <p class="text-secondary text-sm mb-6">支持视频预览与成品链接跳转</p>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- 作品卡片模板 - 复制可新增 -->
+                    <div class="bg-card rounded-xl overflow-hidden border border-border card-hover">
+                        <div class="aspect-video bg-gray-100 relative">
+                            <!-- 视频预览或封面图，替换src -->
+                            <img src="H5互动作品类/马勺脸谱 封面h5.jpeg" 
+                                 alt="H5作品封面" 
+                                 class="w-full h-full object-cover"
+                                 onerror="logError('H5作品封面加载失败')">
+                            <div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                                <a href="https://s.u.h5mc.com/c/hnql/vuum/index.html" target="_blank" class="px-4 py-2 bg-white text-primary text-sm rounded-full">
+                                    查看作品 →
+                                </a>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-medium mb-1">马勺脸谱</h4>
+                            <p class="text-secondary text-sm">一款宣传传统非遗工艺的H5互动作品</p>
+                        </div>
+                    </div>
+                    <!-- 复制上面卡片新增更多作品 -->
+                    <div class="bg-card rounded-xl overflow-hidden border border-border border-dashed flex items-center justify-center aspect-video">
+                        <span class="text-secondary text-sm">
+                             <!-- 作品卡片模板 - 复制可新增 -->
+                    <div class="bg-card rounded-xl overflow-hidden border border-border card-hover">
+                        <div class="aspect-video bg-gray-100 relative">
+                            <!-- 视频预览或封面图，替换src -->
+                            <img src="H5互动作品类/正当防卫 封面 h5.jpeg"
+                                 alt="H5作品封面" 
+                                 class="w-full h-full object-cover"
+                                 onerror="logError('H5作品封面加载失败')">
+                            <div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                                <a href="https://s.u.h5mc.com/c/hnql/bdqt/index.html" target="_blank" class="px-4 py-2 bg-white text-primary text-sm rounded-full">
+                                    查看作品 →
+                                </a>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-medium mb-1">正当防卫</h4>
+                            <p class="text-secondary text-sm">一款展示正当防卫理念的H5互动作品</p>
+                        </div>
+                    </div>
+                    <!-- 复制上面卡片新增更多作品 --></span>
+                    </div>
+                    <div class="bg-card rounded-xl overflow-hidden border border-border border-dashed flex items-center justify-center aspect-video">
+                        <span class="text-secondary text-sm"> <!-- 作品卡片模板 - 复制可新增 -->
+                    <div class="bg-card rounded-xl overflow-hidden border border-border card-hover">
+                        <div class="aspect-video bg-gray-100 relative">
+                            <!-- 视频预览或封面图，替换src -->
+                            <img src="H5互动作品类/敦煌飞天 封面 h5.jpeg" 
+                                 alt="H5作品封面" 
+                                 class="w-full h-full object-cover"
+                                 onerror="logError('H5作品封面加载失败')">
+                            <div class="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                                <a href="https://s.u.h5mc.com/c/hnql/rx2z/index.html" target="_blank" class="px-4 py-2 bg-white text-primary text-sm rounded-full">
+                                    查看作品 →
+                                </a>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-medium mb-1">敦煌飞天</h4>
+                            <p class="text-secondary text-sm">一款展示敦煌壁画艺术历史的H5互动作品</p>
+                        </div>
+                    </div>
+                    <!-- 复制上面卡片新增更多作品 --></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 版块 2: 海报摄影类 ===== -->
+            <div class="mb-16">
+                <h3 class="text-xl font-semibold mb-6 flex items-center">
+                    <span class="w-1 h-6 bg-accent mr-3"></span>
+                    海报摄影类
+                </h3>
+                <p class="text-secondary text-sm mb-6">平面海报、摄影作品</p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- 作品项模板 -->
+                    <div class="flex gap-4">
+                        <div class="w-[70%] flex-shrink-0">
+                            <img src="海报摄影类/【摄影】阳岭.jpg" 
+                                 alt="海报作品" 
+                                 class="w-full rounded-lg shadow-sm"
+                                 onerror="logError('海报作品图片加载失败')">
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium mb-2">【摄影】《阳岭》</h4>
+                            <p class="text-secondary text-sm leading-relaxed">
+                                苍山叠翠拥着一湖碧水，古亭临波而立，木栈道向湖心缓缓延伸。
+                                晨光漫过林梢，在水面晕开温润的倒影，天地间浸满澄澈安宁的山野清意。
+                                
+                            </p>
+                            <p class="text-xs text-secondary/70 mt-2">
+                                <br>
+                                
+                            </p>
+                        </div>
+                    </div>
+                    <!-- 复制新增 -->
+                    <div class="flex gap-4">
+                        <div class="w-[70%] flex-shrink-0">
+                            <img src="海报摄影类/【摄影】清明 雨.png" 
+                                 alt="摄影作品" 
+                                 class="w-full rounded-lg shadow-sm"
+                                 onerror="logError('摄影作品图片加载失败')">
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium mb-2">【摄影】《晚春雨》</h4>
+                            <p class="text-secondary text-sm leading-relaxed">
+                                
+                            </p>
+                            <p class="text-xs text-secondary/70 mt-2">
+                                晚春花夹道盛放，雨后路面浸着水光，将花树与天光晕成一片柔软倒影。
+                                撑伞人缓步走过花径，在漫天花色里留下沉静的身影，春日的清寂与温柔都凝在这帧雨景里。
+                            </p>
+                        </div>
+                    </div>
+                    <!-- 作品项模板 -->
+                    <div class="flex gap-4">
+                        <div class="w-[70%] flex-shrink-0">
+                            <img src="海报摄影类/【摄影】水中影 修图后.png" 
+                                 alt="海报作品" 
+                                 class="w-full rounded-lg shadow-sm"
+                                 onerror="logError('海报作品图片加载失败')">
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium mb-2">【摄影】《纸上峰》</h4>
+                            <p class="text-secondary text-sm leading-relaxed">
+                                石质书卷层层错叠成塔，以富有张力的倾斜秩序静立水面。
+                                澄澈水面复刻出对称的虚实双影，与弧形玻璃建筑相映，在现代空间里晕开沉静的人文诗意。
+                            </p>
+                            <p class="text-xs text-secondary/70 mt-2">
+                                <br>
+                                
+                            </p>
+                        </div>
+                    </div>
+                    <!-- 作品项模板 -->
+                    <div class="flex gap-4">
+                        <div class="w-[70%] flex-shrink-0">
+                            <img src="海报摄影类/【海报】汽车海报1.png" 
+                                 alt="海报作品" 
+                                 class="w-full rounded-lg shadow-sm"
+                                 onerror="logError('海报作品图片加载失败')">
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium mb-2">【海报】《奋斗没有终点》</h4>
+                            <p class="text-secondary text-sm leading-relaxed">
+                                疾驰的跑车是奋斗的具象，长路向前延伸，永无终点。
+                                以一往无前的驰骋姿态，致敬每一段永不停歇的追梦征途。
+                                
+                            </p>
+                            <p class="text-xs text-secondary/70 mt-2">
+                                <br>
+                                
+                            </p>
+                        </div>
+                    </div>
+                    <!-- 作品项模板 -->
+                    <div class="flex gap-4">
+                        <div class="w-[70%] flex-shrink-0">
+                            <img src="海报摄影类/【海报】大闸蟹美食海报-1.png" 
+                                 alt="海报作品" 
+                                 class="w-full rounded-lg shadow-sm"
+                                 onerror="logError('海报作品图片加载失败')">
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium mb-2">【商业广告】《蟹正肥》</h4>
+                            <p class="text-secondary text-sm leading-relaxed">
+                                红亮油润的熟蟹静卧盘中，壳坚肉满，透着时令鲜活的饱满底气。
+                                丰腴黄膏藏着原生鲜甜，是来自江湖的时令肥美馈赠。
+                                
+                            </p>
+                            <p class="text-xs text-secondary/70 mt-2">
+                                <br>
+                                
+                            </p>
+                        </div>
+                    </div>
+                    <!-- 作品项模板 -->
+                    <div class="flex gap-4">
+                        <div class="w-[70%] flex-shrink-0">
+                            <img src="海报摄影类/【海报】桂香满中秋 .png" 
+                                 alt="海报作品" 
+                                 class="w-full rounded-lg shadow-sm"
+                                 onerror="logError('海报作品图片加载失败')">
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-medium mb-2">【公益宣传】《桂满香，月正圆》</h4>
+                            <p class="text-secondary text-sm leading-relaxed">
+                                一轮满月悬于清蓝秋夜，祥云灯影晕染出温柔佳节氛围。
+                                玉兔衔饼，人影相伴，满盒清甜盛起人间团圆的温软情意。
+                                
+                            </p>
+                            <p class="text-xs text-secondary/70 mt-2">
+                                <br>
+                                
+                            </p>
+                        </div>
+                        
+                    </div>
+                
+            </div>
+            
+
+            <!-- ===== 版块 3: 视频类 ===== -->
+<div class="mb-16">
+    <h3 class="text-xl font-semibold mb-6 flex items-center">
+        <span class="w-1 h-6 bg-accent mr-3"></span>
+        视频类作品
+    </h3>
+    <p class="text-secondary text-sm mb-6">短视频、宣传片、动画视频等作品展示</p>
+
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 视频卡片【已修改】视频 1 -->
+        <div class="bg-card rounded-xl overflow-hidden border border-border card-hover" onclick="playVideo(this)">
+            <div class="aspect-video bg-gray-900 relative">
+                <!-- 嵌入视频或放置封面 -->
+                <img src="视频类/【大广赛参赛作品】娃哈哈广告.jpg" 
+                     alt="视频封面" 
+                     class="w-full h-full object-cover opacity-80 cover-img"
+                     onerror="logError('视频封面加载失败')">
+                <video class="hidden video-player" src="视频类/【大广赛参赛作品】娃哈哈广告 .mp4" controls></video>
+                <div class="absolute inset-0 flex items-center justify-center play-btn">
+                    <div class="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center">
+                        <span class="text-primary text-xl">▶</span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4">
+                <h4 class="font-medium mb-1">【大广赛参赛作品】娃哈哈广告</h4>
+                <p class="text-secondary text-xs">时长：00:26 | 类型：广告</p>
+                <p class="text-secondary text-xs">简介：本视频将为您详细介绍娃哈哈品牌的产品特色，帮助您更好地了解这一知名饮料品牌。</p>
+            </div>
+        </div>
+        <!-- 视频卡片【已修改】视频 2 -->
+        <div class="bg-card rounded-xl overflow-hidden border border-border card-hover" onclick="playVideo(this)">
+            <div class="aspect-video bg-gray-900 relative">
+                <!-- 嵌入视频或放置封面 -->
+                <img src="视频类/【非遗宣传】马勺脸谱短视频.mp4.jpg" 
+                     alt="视频封面" 
+                     class="w-full h-full object-cover opacity-80 cover-img"
+                     onerror="logError('视频封面加载失败')">
+                <video class="hidden video-player" src="视频类/【非遗宣传】马勺脸谱短视频.mp4" controls></video>
+                <div class="absolute inset-0 flex items-center justify-center play-btn">
+                    <div class="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center">
+                        <span class="text-primary text-xl">▶</span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4">
+                <h4 class="font-medium mb-1">【非遗宣传】马勺脸谱短视频</h4>
+                <p class="text-secondary text-xs">时长：00:10 | 类型：非遗宣传</p>
+                <p class="text-secondary text-xs">简介：本视频将为您详细介绍马勺脸谱的文化背景和制作工艺，帮助您更好地理解和欣赏这一传统艺术形式。</p>
+            </div>
+        </div>
+          <!-- 视频卡片【已修改】视频 3 -->
+        <div class="bg-card rounded-xl overflow-hidden border border-border card-hover" onclick="playVideo(this)">
+            <div class="aspect-video bg-gray-900 relative">
+                <!-- 嵌入视频或放置封面 -->
+                <img src="视频类/【公益科普】麻将科普视频.mp4.jpg" 
+                     alt="视频封面" 
+                     class="w-full h-full object-cover opacity-80 cover-img"
+                     onerror="logError('视频封面加载失败')">
+                <video class="hidden video-player" src="视频类/【公益科普】麻将科普视频.mp4" controls></video>
+                <div class="absolute inset-0 flex items-center justify-center play-btn">
+                    <div class="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center">
+                        <span class="text-primary text-xl">▶</span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4">
+                <h4 class="font-medium mb-1">【科普】麻将科普视频</h4>
+                <p class="text-secondary text-xs">时长：03:41 | 类型：科普</p>
+                <p class="text-secondary text-xs">简介：本视频将为您详细介绍麻将的规则和技巧，帮助您更好地理解和享受这项传统游戏。</p>
+            </div>
+        </div>
+          <!-- 视频卡片【已修改】视频 4 -->
+        <div class="bg-card rounded-xl overflow-hidden border border-border card-hover" onclick="playVideo(this)">
+            <div class="aspect-video bg-gray-900 relative">
+                <!-- 嵌入视频或放置封面 -->
+                <img src="视频类/【娱乐技术向】AE音乐文字PV.mp4.jpg" 
+                     alt="视频封面" 
+                     class="w-full h-full object-cover opacity-80 cover-img"
+                     onerror="logError('视频封面加载失败')">
+                <video class="hidden video-player" src="视频类/【娱乐技术向】AE音乐文字PV.mp4" controls></video>
+                <div class="absolute inset-0 flex items-center justify-center play-btn">
+                    <div class="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center">
+                        <span class="text-primary text-xl">▶</span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4">
+                <h4 class="font-medium mb-1">【娱乐技术向】AE音乐文字PVK《so far away》</h4>
+                <p class="text-secondary text-xs">时长：00:31 | 类型：娱乐技术向</p>
+                <p class="text-secondary text-xs">简介：本音乐文字PV视频展示内容使用AE软件制作</p>
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+
+
+<script>
+function playVideo(el) {
+    const coverImg = el.querySelector('.cover-img');
+    const playBtn = el.querySelector('.play-btn');
+    const videoDom = el.querySelector('.video-player');
+
+    coverImg.classList.add('hidden');
+    playBtn.classList.add('hidden');
+    videoDom.classList.remove('hidden');
+    videoDom.play();
+}
+</script>
+
+
+            <!-- ===== 版块 4: 文案脚本类 ===== -->
+            <div class="mb-16">
+                <h3 class="text-xl font-semibold mb-6 flex items-center">
+                    <span class="w-1 h-6 bg-accent mr-3"></span>
+                    文案脚本类
+                </h3>
+                <p class="text-secondary text-sm mb-6">广告文案、视频脚本、公众号推文等文字作品</p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-card p-5 rounded-xl border border-border card-hover">
+                        <div class="text-xs text-accent mb-2">公众号文案 </div>
+                        <h4 class="font-medium mb-3">Ai替换浪潮？《2028年全球智能危机》刷屏，AI真要取代白领、拖垮经济？</h4>
+                        <p class="text-secondary text-sm leading-relaxed line-clamp-3">
+                            一篇非研究报告、非新闻报道，仅仅是“推理严谨的小说”，竟能引发全球金融市场地震——道琼斯指数单日暴跌820点，相关科技股集体下挫，无数人开始恐慌：AI的终极冲击，真的要来了？这篇引发外网轩然大波的文章，就是《2028年全球智能危机》。它没有渲染夸张的末日场景，却用缜密的逻辑，戳中了人类最深层的焦虑：我们赖以生存的“智力优势”，正在被AI悄悄瓦解。
+                        </p>
+                        <a href="https://mp.weixin.qq.com/s/5ZEt9RtWWH1Fn-DJjNfB-g" class="text-sm text-accent mt-3 inline-block hover:underline">阅读全文 →</a>
+                    </div>
+                    <div class="bg-card p-5 rounded-xl border border-border card-hover">
+                        <div class="text-xs text-accent mb-2">公众号文案 </div>
+                        <h4 class="font-medium mb-3">她没有心，却治愈了亿万人的孤独</h4>
+                        <p class="text-secondary text-sm leading-relaxed line-clamp-3">
+                            最近一条名为“爱，死亡，和机械人：AI眼中的世界和我们”视频火爆国内外，AI主播neruo-sama带来了关于AI人味的思考。AI主播Neuro-sama（中文圈常称 “牛肉”）是全球顶流的AI 虚拟主播，由英国程序员 Vedal 开发，核心特点是全 AI 实时驱动直播，没有传统“中之人”真人操控 。2022 年 12 月 19 日在 Twitch 平台首播 ，融合大语言模型（LLM）、独立游戏 AI、TTS（语音合成）与 Live2D/3D 形象，能实时读弹幕、打赏并自然回应。
+                        </p>
+                        <a href="https://mp.weixin.qq.com/s/_jXe8GK4FuKF4WS83mLXqQ" class="text-sm text-accent mt-3 inline-block hover:underline">查看详情 →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 版块 5: 静态网页链接展览 ===== -->
+            <div class="mb-16">
+                <h3 class="text-xl font-semibold mb-6 flex items-center">
+                    <span class="w-1 h-6 bg-accent mr-3"></span>
+                    网页作品
+                </h3>
+                <p class="text-secondary text-sm mb-6">静态页面、个人项目等，点击可跳转预览</p>
+
+                <div class="grid md:grid-cols-3 gap-5">
+                    <a href="https://kaipins.github.io/repository/%E7%AB%AF%E5%8D%88%E7%B2%BD%E5%AD%90%E5%8F%A3%E5%91%B3%E5%AF%B9%E5%86%B33.html" target="_blank" class="block bg-card p-4 rounded-xl border border-border card-hover">
+                        <div class="aspect-video bg-gray-100 rounded mb-3 overflow-hidden">
+                            <img src="粽横四海 展示封面.jpeg" 
+                                 alt="网页预览" 
+                                 class="w-full h-full object-cover"
+                                 onerror="logError('网页预览图加载失败')">
+                        </div>
+                        <h4 class="font-medium text-sm">【公益宣传】端午节之棕横四海</h4>
+                        <p class="text-secondary text-xs mt-1">HTML</p>
+                    </a>
+                    <div class="bg-card p-4 rounded-xl border border-border border-dashed flex items-center justify-center aspect-video">
+                        <span class="text-secondary text-sm">敬请期待</span>
+                    </div>
+                    <div class="bg-card p-4 rounded-xl border border-border border-dashed flex items-center justify-center aspect-video">
+                        <span class="text-secondary text-sm"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 预留版块：后续可自行补充 ===== -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold mb-6 flex items-center">
+                    <span class="w-1 h-6 bg-border mr-3"></span>
+                    敬请期待
+                </h3>
+                <p class="text-secondary text-sm"></p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ========== 联系方式 ========== -->
+    <section id="contact" class="py-16 px-6 bg-white border-t border-border">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-2xl font-bold mb-4">
+                <span class="inline-block w-10 h-1 bg-accent mr-3 align-middle"></span>
+                联系我
+                <span class="inline-block w-10 h-1 bg-accent ml-3 align-middle"></span>
+            </h2>
+            <p class="text-secondary mb-8">欢迎合作洽谈或交流探讨</p>
+
+            <div class="grid md:grid-cols-3 gap-6 text-sm">
+                <div class="p-4 bg-light rounded-lg">
+                    <div class="text-accent mb-2">📧 邮箱</div>
+                    <p class="text-secondary">3345381569@qq.com</p>
+                </div>
+                <div class="p-4 bg-light rounded-lg">
+                    <div class="text-accent mb-2">📱 微信号</div>
+                    <p class="text-secondary">lh18170149266</p>
+                </div>
+                <div class="p-4 bg-light rounded-lg">
+                    <div class="text-accent mb-2">📍 所在地</div>
+                    <p class="text-secondary"> 西安/赣州</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== 页脚 ========== -->
+    <footer class="py-6 px-6 bg-primary text-white/70 text-center text-xs">
+        <p>© 李鸿个人作品集 · 由本人使用AI设计开发</p>
+    </footer>
+
+    <!-- ========== JavaScript 功能 ========== -->
+    <script>
+        // ===== 报错日志系统 =====
+        const errorLogs = [];
+        
+        // 记录错误日志
+        function logError(message) {
+            const time = new Date().toLocaleTimeString();
+            const logItem = `[${time}] ❌ ${message}`;
+            errorLogs.push(logItem);
+            
+            const logList = document.getElementById('errorLogList');
+            if (logList) {
+                const div = document.createElement('div');
+                div.textContent = logItem;
+                logList.appendChild(div);
+                logList.scrollTop = logList.scrollHeight;
+            }
+            
+            // 同时输出到控制台
+            console.error(message);
+        }
+
+        // 记录普通日志
+        function logInfo(message) {
+            const time = new Date().toLocaleTimeString();
+            const logItem = `[${time}] ℹ️ ${message}`;
+            
+            const logList = document.getElementById('errorLogList');
+            if (logList) {
+                const div = document.createElement('div');
+                div.className = 'text-gray-400';
+                div.textContent = logItem;
+                logList.appendChild(div);
+            }
+        }
+
+        // 切换日志面板显示
+        function toggleErrorConsole() {
+            const console = document.getElementById('errorConsole');
+            console.classList.toggle('hidden');
+        }
+
+        // 全局错误捕获
+        window.onerror = function(message, source, lineno, colno, error) {
+            logError(`${message} (行 ${lineno})`);
+            return false;
+        };
+
+        // 页面加载完成日志
+        window.addEventListener('load', function() {
+            logInfo('页面加载完成');
+            logInfo('当前共 ' + errorLogs.length + ' 个错误');
+        });
+
+        // ===== 平滑滚动 =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                } else {
+                    logError('导航链接目标不存在: ' + this.getAttribute('href'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
