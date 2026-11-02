@@ -388,7 +388,7 @@ tailwind.config = {
 
 <script>
 function playVideo(el) {
-  document.querySelectorAll('.video-player').forEach(v => { v.pause(); v.classList.add('hidden'); });
+  document.querySelectorAll('.video-player').forEach(v => { if (v.tagName === 'VIDEO') v.pause(); v.classList.add('hidden'); });
   document.querySelectorAll('.cover-img').forEach(i => i.classList.remove('hidden'));
   document.querySelectorAll('.play-btn').forEach(b => b.classList.remove('hidden'));
   el.querySelector('.cover-img').classList.add('hidden');
